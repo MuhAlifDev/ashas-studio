@@ -411,7 +411,59 @@
       display: block;
       width: 20px;
       height: 2px;
-      background: var(--navy)
+      background: var(--navy);
+      transition: transform .35s cubic-bezier(.16,1,.3,1), opacity .25s ease
+    }
+
+    .hb.open span:nth-child(1) { transform: translateY(7px) rotate(45deg) }
+    .hb.open span:nth-child(2) { opacity: 0; transform: scaleX(0) }
+    .hb.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg) }
+
+    /* ── BUBBLE MENU ── */
+    .bbl {
+      display: none;
+      position: fixed;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: rgba(17,28,39,.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1.5px solid rgba(0,194,204,.35);
+      color: rgba(255,255,255,.95);
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      text-decoration: none;
+      text-align: center;
+      line-height: 1.3;
+      padding: 6px;
+      align-items: center;
+      justify-content: center;
+      z-index: 501;
+      box-shadow: 0 12px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(0,194,204,.08);
+      opacity: 0;
+      transform: scale(.2);
+      pointer-events: none;
+      transition:
+        opacity .45s cubic-bezier(.34,1.5,.4,1),
+        transform .55s cubic-bezier(.34,1.5,.4,1),
+        background .25s,
+        border-color .25s
+    }
+
+    .bbl.vis {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto
+    }
+
+    .bbl:active {
+      background: rgba(0,194,204,.25);
+      border-color: rgba(0,194,204,.7);
+      transform: scale(.92)
     }
 
     .mm {
@@ -1591,87 +1643,195 @@
     @media(max-width:768px) {
       nav {
         top: 10px;
-        width: calc(100% - 24px)
+        width: calc(100% - 20px);
+        align-items: flex-start
       }
 
-      .nm-pill,
-      .nc {
-        display: none
+      .nl { padding: 4px 9px; align-self: center }
+      .nl img { height: 16px }
+
+      .nr {
+        position: static;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px
       }
+
+      .lt {
+        padding: 6px 11px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        transition: transform .55s cubic-bezier(.34,1.2,.5,1), opacity .35s ease
+      }
+
+      /* Slides DOWN to give space for bubbles */
+      .lt.bm-open {
+        transform: translateY(180px);
+      }
+
+      .lt-txt { font-size: 11px; letter-spacing: 1px }
+
+      .nm-pill, .nc { display: none }
 
       .hb {
-        display: flex
+        display: flex;
+        padding: 9px 11px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 10px rgba(0,0,0,.1);
+        position: relative;
+        z-index: 502
       }
 
-      .hero {
-        padding: 120px 24px 72px;
-        min-height: 100svh
+      .bbl { display: flex }
+
+      /* Backdrop overlay when bubble menu open */
+      .bm-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(17,28,39,.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .4s ease;
+        z-index: 499
+      }
+      .bm-backdrop.show {
+        opacity: 1;
+        pointer-events: auto
       }
 
-      .process,
-      .about,
-      .contact {
-        padding: 72px 24px
+      /* ── Hero ── */
+      .hero { padding: 110px 24px 72px; min-height: 100svh }
+
+      .h-main-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 28px
       }
 
-      footer {
-        padding: 48px 24px
+      .hstats { right: 24px; bottom: 60px; gap: 20px }
+      .sn { font-size: 32px; letter-spacing: -2px }
+
+      /* ── CTA — smaller, centered, more spacing ── */
+      .cta-wrap {
+        width: 100%;
+        height: auto;
+        flex-direction: column;
+        margin-right: 0;
+        margin-top: 20px;
+        align-items: center;
+        justify-content: center
       }
 
-      .svc-head {
-        padding: 0 24px
-      }
-
-      .svc-grid {
-        padding: 0 24px;
-        flex-direction: column
-      }
-
-      .ps {
-        grid-template-columns: 56px 1fr;
-        gap: 20px;
-        padding: 40px 0
-      }
-
-      .pn {
-        font-size: 48px
-      }
-
-      .copts {
-        flex-direction: column
-      }
-
-      .ccard {
+      .cta-inner {
+        width: auto;
         max-width: 100%
       }
 
-      .fi {
-        flex-direction: column;
-        gap: 24px
+      .cta-initial {
+        padding: 16px 36px;
+        font-size: 15px;
+        max-width: 100%
       }
 
+      .cta-expanded {
+        flex-direction: column;
+        padding: 0 !important;
+        align-items: stretch
+      }
+
+      .cta-wrap.open .cta-expanded {
+        padding: 12px !important;
+        max-width: 280px
+      }
+
+      .cta-div { width: 100%; height: 1px; margin: 4px 0 }
+      .cta-opt { justify-content: center; font-size: 14px; padding: 11px 20px }
+      .cta-close { align-self: center; margin: 4px 0 0 0 }
+
+      /* ── Sections ── */
+      .process, .about, .contact { padding: 72px 24px }
+      footer { padding: 48px 24px }
+      .svc-head { padding: 0 24px }
+      .svc-grid { padding: 0 24px; flex-direction: column }
+      .ps { grid-template-columns: 56px 1fr; gap: 20px; padding: 40px 0 }
+      .pn { font-size: 48px }
+      .copts { flex-direction: column }
+      .ccard { max-width: 100% }
+      .fi { flex-direction: column; gap: 24px }
+      .hscr { left: 24px }
+
+      /* ── Team Card: tap-to-reveal ── */
+      .team-row { gap: 16px }
+
       .tc {
-        grid-template-columns: 100% 0fr;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
         height: auto;
-        min-height: 320px
+        min-height: unset;
+        cursor: pointer;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 12px 32px rgba(0,0,0,.25);
+        transition: box-shadow .5s
+      }
+
+      .tc.open {
+        box-shadow: 0 24px 56px rgba(0,0,0,.4)
       }
 
       .tc-photo {
         width: 100%;
-        height: 320px
+        height: 240px;
+        position: relative;
+        flex-shrink: 0
       }
+
+      .tc-photo::after {
+        content: '';
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+        width: 36px;
+        height: 36px;
+        background: rgba(0,194,204,.95) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat center/16px;
+        border-radius: 50%;
+        z-index: 3;
+        transition: transform .4s cubic-bezier(.16,1,.3,1);
+        box-shadow: 0 4px 12px rgba(0,0,0,.3)
+      }
+
+      .tc.open .tc-photo::after { transform: rotate(180deg) }
+
+      .tc-overlay { display: block; opacity: 1 }
+
+      .tc-info {
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        background: var(--navy);
+        transition: max-height .55s cubic-bezier(.25,1,.2,1)
+      }
+
+      .tc.open .tc-info {
+        max-height: 600px
+      }
+
+      .tc-info-inner {
+        width: 100%;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity .4s ease .15s, transform .4s ease .15s;
+        padding: 28px 24px
+      }
+
+      .tc.open .tc-info-inner { opacity: 1; transform: none }
 
       .tc:hover {
-        grid-template-columns: 100% 0fr
-      }
-
-      .hscr {
-        left: 24px
-      }
-
-      .cta-wrap {
-        height: auto;
-        flex-direction: column
+        grid-template-columns: unset;
+        transform: none;
+        filter: none
       }
     }
   </style>
@@ -1743,22 +1903,19 @@
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nr">
+        <button class="hb" id="hbtn"><span></span><span></span><span></span></button>
         <div class="lt" id="lt">
           <span class="lt-txt" id="ltTxt">EN</span>
         </div>
         <a href="#contact" class="nc">Start a Project</a>
       </div>
-      <button class="hb" id="hbtn"><span></span><span></span><span></span></button>
     </nav>
 
-    <!-- MOBILE MENU -->
-    <div class="mm" id="mm">
-      <button class="mm-x" id="mmX">×</button>
-      <a href="#services" class="mm-link">Services</a>
-      <a href="#process" class="mm-link">Process</a>
-      <a href="#about" class="mm-link">About</a>
-      <a href="#contact" class="mm-link">Contact</a>
-    </div>
+    <!-- MOBILE BUBBLE MENU -->
+    <a href="#services" class="bbl mm-link">Services</a>
+    <a href="#process" class="bbl mm-link">Process</a>
+    <a href="#about" class="bbl mm-link">About</a>
+    <a href="#contact" class="bbl mm-link">Contact</a>
 
     <!-- HERO -->
     <section class="hero" id="hero">
@@ -2266,11 +2423,91 @@
     // ── NAV ──
     window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('s', window.scrollY > 50));
 
-    // ── MOBILE MENU ──
-    const mm = document.getElementById('mm');
-    document.getElementById('hbtn').addEventListener('click', () => mm.classList.add('o'));
-    document.getElementById('mmX').addEventListener('click', () => mm.classList.remove('o'));
-    document.querySelectorAll('.mm-link').forEach(l => l.addEventListener('click', () => mm.classList.remove('o')));
+    // ── MOBILE BUBBLE MENU ──
+    const hbtn = document.getElementById('hbtn');
+    const ltEl = document.getElementById('lt');
+    const bubbles = document.querySelectorAll('.bbl');
+    let bmOpen = false;
+
+    // Create backdrop element
+    const bmBackdrop = document.createElement('div');
+    bmBackdrop.className = 'bm-backdrop';
+    document.body.appendChild(bmBackdrop);
+
+    function calcPos() {
+      const r = hbtn.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      const bubbleSize = 68;
+      const half = bubbleSize / 2;
+      const radius = 105;
+
+      // 4 bubbles in a quarter-arc from straight-left to straight-down
+      // Angles 180°, 210°, 240°, 270° (going clockwise from left)
+      // Screen Y goes DOWN, so we negate sin
+      const angles = [180, 210, 240, 270];
+      return angles.map(deg => {
+        const rad = deg * Math.PI / 180;
+        return {
+          left: cx + Math.cos(rad) * radius - half,
+          top:  cy - Math.sin(rad) * radius - half
+        };
+      });
+    }
+
+    function openBM() {
+      if (window.innerWidth > 768) return;
+      bmOpen = true;
+      hbtn.classList.add('open');
+      ltEl.classList.add('bm-open');
+      bmBackdrop.classList.add('show');
+
+      const pos = calcPos();
+      bubbles.forEach((b, i) => {
+        b.style.left = pos[i].left + 'px';
+        b.style.top  = pos[i].top  + 'px';
+        b.style.transitionDelay = (i * .06) + 's';
+        // Force reflow then add vis class for proper animation
+        void b.offsetWidth;
+        b.classList.add('vis');
+      });
+    }
+
+    function closeBM() {
+      bmOpen = false;
+      hbtn.classList.remove('open');
+      ltEl.classList.remove('bm-open');
+      bmBackdrop.classList.remove('show');
+      bubbles.forEach((b, i) => {
+        b.style.transitionDelay = ((bubbles.length - 1 - i) * .04) + 's';
+        b.classList.remove('vis');
+      });
+    }
+
+    hbtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      bmOpen ? closeBM() : openBM();
+    });
+    bmBackdrop.addEventListener('click', closeBM);
+    document.querySelectorAll('.mm-link').forEach(l => l.addEventListener('click', closeBM));
+
+    // Recalculate bubble positions on resize
+    window.addEventListener('resize', () => {
+      if (bmOpen) {
+        const pos = calcPos();
+        bubbles.forEach((b, i) => {
+          b.style.left = pos[i].left + 'px';
+          b.style.top  = pos[i].top  + 'px';
+        });
+      }
+    });
+
+    // ── TEAM CARD TAP (mobile) ──
+    document.querySelectorAll('.tc').forEach(card => {
+      card.addEventListener('click', () => {
+        if (window.innerWidth <= 768) card.classList.toggle('open');
+      });
+    });
 
     // ── LANGUAGE TOGGLE ──
     document.getElementById('lt').addEventListener('click', () => {
